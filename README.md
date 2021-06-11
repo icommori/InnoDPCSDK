@@ -137,6 +137,10 @@ compileOnly project(path: ':libInnoService')
 ```
 InnoManager iman = InnoManager.getInstance();
 iman.dpc_setDeviceOwner();
+//Add user restriction
+iman.dpc_addUserRestriction(true, UserManager.DISALLOW_OUTGOING_CALLS);
+//Specific restriction
+iman.dpc_setStatusBarDisabled(false);
 ```
   
   
