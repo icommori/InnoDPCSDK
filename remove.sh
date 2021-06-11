@@ -1,0 +1,11 @@
+find . -type d -name 'bin' -exec rm -rfv {} \;
+find . -type d -name 'gen' -exec rm -rfv {} \;
+find . -type d -name '.settings' -exec rm -rfv {} \;
+find . -type d -name '.metadata' -exec rm -rfv {} \;
+find . -type d -name '.idea' -exec rm -rfv {} \;
+find . -type d -name '.gradle' -exec rm -rfv {} \;
+find . -type f -name '.!*' -exec rm -rfv {} \;
+find . -type f -name '._*' -exec rm -rfv {} \;
+find . -type f -name '.DS_Store' -exec rm -rfv {} \;
+find . -type d -name 'buildout' -exec rm -rfv {} \;
+find . -type d -name 'build' -exec rm -rfv {} \;

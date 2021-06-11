@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
+
+    <CheckBox
+        android:id="@+id/disable_statusbar"
+        style="@style/CustCheckBox"
+        android:text="@string/disable_statusbar"
+        android:layout_marginTop="8dp"/>
+
+    <CheckBox
+        android:id="@+id/disallow_debugging_features"
+        style="@style/CustCheckBox"
+        android:text="@string/disallow_debugging_features" />
+
+    <CheckBox
+        android:id="@+id/hide_unused_apps"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/hide_unused_apps" />
+
+    <CheckBox
+        android:id="@+id/setscreencapturedisabled"
+        style="@style/CustCheckBox"
+        android:text="@string/setscreencapturedisabled" />
+
+    <CheckBox
+        android:id="@+id/clearapplicationuserdata"
+        style="@style/CustCheckBox"
+        android:text="@string/clearapplicationuserdata"/>
+    <CheckBox
+        android:id="@+id/installcacert"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/installcacert"/>
+    <CheckBox
+        android:id="@+id/getwifimacaddress"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/getwifimacaddress"/>
+    <CheckBox
+        android:id="@+id/setdeviceownerlockscreeninfo"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/setdeviceownerlockscreeninfo"/>
+    <CheckBox
+        android:id="@+id/installsystemupdate"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/installsystemupdate"/>
+    <CheckBox
+        android:id="@+id/reboot"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/reboot_description"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+    <CheckBox
+        android:id="@+id/requestbugreport"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/requestbugreport"/>
+        <ImageButton
+            android:id="@+id/imgbutton_bugreport"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_action_list"
+            android:background="?android:attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"/>
+    </RelativeLayout>
+    <CheckBox
+        android:id="@+id/resetpassword"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/resetpassword"/>
+    <CheckBox
+        android:id="@+id/maximumfailedpasswordsforwipe"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/maximumfailedpasswordsforwipe"/>
+    <CheckBox
+        android:id="@+id/wipedata"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/wipedata"/>
+    <CheckBox
+        android:id="@+id/ismastervolumemuted"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/ismastervolumemuted"/>
+    <CheckBox
+        android:id="@+id/settime"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/settime"/>
+    <CheckBox
+        android:id="@+id/settimezone"
+        style="@style/CustCheckBox"
+        android:gravity="center_vertical"
+        android:text="@string/settimezone"/>
+</LinearLayout>
+</ScrollView>

@@ -1,0 +1,83 @@
+<resources>
+    <string name="app_name">Innocomm DPC</string>
+    <!-- Strings used for fragments for navigation -->
+
+    <string name="enter_dpc">Enter DPC</string>
+    <string name="exit_dpc">Exit DPC</string>
+    <string name="disable_statusbar">Disabling the status bar blocks notifications and quick settings.</string>
+    <string name="disallow_debugging_features">Specifies if a user is disallowed from enabling or accessing debugging features.</string>
+    <string name="hide_unused_apps">Hide or unhide packages.</string>
+    <string name="exit_dpc_title">Exit DPC?</string>
+    <string name="exit_dpc_msg">Are you sure you want to exit DPC mode?</string>
+    <string name="wipe">WIPE</string>
+    <string name="set_dpc_fail">Can\'t  enable DPC feature!</string>
+    <string name="enter_dpc_title">Enable Device Policy Control</string>
+    <string name="enter_dpc_msg">"Will offers system-level device management capabilities through the InnoService SDK."</string>
+    <string name="dpc_detailed_text">Innocomm DPC(Device Policy Controller) is an Innocomm enterprise deployment. A DPC app,which is a work policy controller, controls local device policies and system applications on devices through InnoService SDK.</string>
+    <string name="user_restrictions">User Restrictions</string>
+    <string name="copyright">Copyright © InnoComm Mobile Technology Corporation , All Rights Reserved.</string>
+    <string name="companylink">http://www.innocomm.com/</string>
+    <string name="author">Mori Lin</string>
+    <string name="authoremail">mori.lin@innocomm.com</string>
+    <string name="action_help">Help</string>
+    <string name="hidden_app_title">Set Apps Hidden</string>
+    <string name="hidden_app_msg">Hide or unhide packages. When a package is hidden it is unavailable for use, but the data and actual package file remain. Impact List:\n
+    com.android.email\n
+    com.android.music\n
+    com.android.phone\n
+    com.android.browser\n
+    com.android.mms\n
+    com.android.calendar\n
+    com.android.contacts\n
+    com.android.gallery3d\n
+    com.android.dialer\n
+    com.android.deskclock\n
+    com.android.quicksearchbox\n
+    com.android.documentsui
+    </string>
+    <string name="setscreencapturedisabled">To set whether the screen capture is disabled. Disabling screen capture also prevents the content from being shown on display devices that do not have a secure video output.</string>
+    <string name="short_support_msg">This setting is disabled by your administrator. Contact mori.lin@innocomm.com</string>
+    <string name="long_support_msg">The device is managed by your administrator. Contact mori.lin@innocomm.com</string>
+    <string name="restriction_title">Restriction Detail</string>
+    <string name="specific_restrictions">Specific Restrictions</string>
+    <string name="action_exit">Exit DPC</string>
+    <string name="clearapplicationuserdata">Clear application user data of a given package. The behaviour of this is equivalent to the target application calling [ActivityManager#clearApplicationUserData()].</string>
+    <string name="clearapplicationuserdata_title">Clear App Data</string>
+    <string name="clearapplicationuserdata_msg">Are you sure you want to clear %s?</string>
+    <string name="installcacert">Installs the given certificate as a user CA.</string>
+    <string name="installcacert_title">Install CA</string>
+    <string name="installcacert_success_msg"><![CDATA[Install CA successfully. Please check it in \nSettins > Security > Encryption & credentials > Trusted credential.]]></string>
+    <string name="installcacert_fail_msg">Install CA failed. Please check you CA file.</string>
+    <string name="installcacert_already_msg">User CA Already exists.</string>
+    <string name="getwifimacaddress">Get the MAC   address of the Wi-Fi device.</string>
+    <string name="getwifimacaddress_title">Get WIFI MAC</string>
+    <string name="bluetoothcontactsharingdisabled">Set whether bluetooth devices can access enterprise contacts.</string>
+    <string name="setdeviceownerlockscreeninfo">Sets the device owner information to be shown on the lock screen.</string>
+    <string name="setdeviceownerlockscreeninfo_title">Screen Lock Info</string>
+    <string name="setdeviceownerlockscreeninfo_msg">The device is managed by Innocomm DPC.</string>
+    <string name="installsystemupdate">Install  a system update from the given file.</string>
+    <string name="reboot_description">Reboot the device. If there is an ongoing call on the device.</string>
+    <string name="reboot_title">Reboot?</string>
+    <string name="reboot_msg">Are you shure you want to reboot the device?</string>
+    <string name="requestbugreport">Request a bugreport.</string>
+    <string name="requestbugreport_title">Request BugReport</string>
+    <string name="requestbugreport_msg">Request a bugreport. Will locate in /data/user_de/0/com.android.shell/files/bugreports</string>
+    <string name="requestbugreport_list_title">BugReport List</string>
+    <string name="resetpassword">Force set a new device unlock password. This takes effect immediately.</string>
+    <string name="password">password</string>
+    <string name="resetpassword_title">Input Password</string>
+    <string name="maximumfailedpasswordsforwipe">Will perform a device wipe after too many incorrect device-unlock passwords have been entered.</string>
+    <string name="wipedata">Ask that all user data be wiped.</string>
+    <string name="wipe_data_title">Wipe data?</string>
+    <string name="wipe_data_confirmation">Are you sure you want to wipe the data?</string>
+    <string name="ismastervolumemuted">Set the master volume mute on or off.</string>
+    <string name="settime">Set the system wall clock time.</string>
+    <string name="settimezone">Set the system\'s persistent default time zone.</string>
+    <string name="settime_title">Set Time</string>
+    <string name="no_set_time">Time not specified</string>
+    <string name="invalid_set_time">Incorrect time</string>
+    <string name="no_timezone">Timezone not specified</string>
+    <string name="invalid_timezone">Timezone id not valid</string>
+    <string name="settimezone_title">Set Timezone</string>
+
+</resources>

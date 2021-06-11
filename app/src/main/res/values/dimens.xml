@@ -1,0 +1,23 @@
+<resources>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <!-- Dimens used for the content inside the setup wizard layout. -->
+
+    <!-- Dimens used for edit text in alertdialog. -->
+
+    <!-- Dimens used for showing some content inset below a description. -->
+
+    <!-- Spacing between an EditText and its TextView label. -->
+
+    <!-- Dimens used in displaying support message. -->
+
+    <!-- Dimens used in color picker dialog -->
+
+    <!-- Dimens used for displaying provisioning params -->
+
+    <!-- Dimens used for key value pair dialog -->
+
+    <!-- Dimens used for dpc login screen -->
+
+    <!-- Dimens used for add account activity -->
+</resources>
