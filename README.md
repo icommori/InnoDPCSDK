@@ -1,8 +1,8 @@
 <img src="/app/src/main/ic_launcher-playstore.png" width="70" height="70">
 
-# InnoService SDK for DPC:
+# InnoDPCSDK:
 
-InnoDPCSDK is an SDK designed to help EMM developer to use Innocom DPC interface for controlling device policy. The sample app will illustrate how to use InnoDPCSDK. 
+InnoDPCSDK is an example using Innocomm DPC SDK which designed to help EMM developer to use Innocom DPC interface for controlling device policy. The sample app will illustrate how to use InnoDPCSDK. 
 
 ## Precondtion
 
