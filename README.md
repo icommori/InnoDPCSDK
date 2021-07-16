@@ -104,12 +104,24 @@ InnoDPCSDK is an example using Innocomm DPC SDK which designed to help EMM devel
 | 8 | Lock Screen Info | Sets the device owner information to be shown on the lock screen.  |
 | 9 | System Update | Install  a system update from the given file..  |
 | 10 | Reboot Device | Reboot the device. If there is an ongoing call on the device. |
-| 11 | BugReport | Request a bugreport.  |
-| 12 | ResetPassword | Set a new device unlock password.  |
-| 13 | Max password Retry |  Will perform a device wipe after too many incorrect device-unlock passwords  |
-| 14 | Wipe data |  Ask that all user data be wiped.  |
-| 15 | Master volume Muted |  Set the master volume mute on or off. |
-| 16 | Settings |  Update  android.provider.Settings.Global/System/Secure settings |
+| 11 | ResetPassword | Set a new device unlock password.  |
+| 12 | Max password Retry |  Will perform a device wipe after too many incorrect device-unlock passwords  |
+| 13 | Wipe data |  Ask that all user data be wiped.  |
+| 14 | Master volume Muted |  Set the master volume mute on or off. |
+| 15 | Settings |  Update  android.provider.Settings.Global/System/Secure settings |
+| 16 | Permission |  Set/Get Permission Grant State |
+
+### Proprietary API:
+|   |     |   |
+| ------------- | -------------   | :------------- |
+| 1 | InputMethod | Send string data and termination key information (Enter / Ctrl Enter / Tab etc.) to Editbox. |
+| 2 | System property | Set/Get System Properties. |
+| 3 | USB function | Config USB connection type |
+| 4 | BugReport function | Generate BugReport |
+| 5 | Settings function | Config some System settings | 
+
+For more information, see API document in doc folder. 
+
 ## How to use InnoDPC SDK
 
 1. Import jar file that provided from Innocomm.
