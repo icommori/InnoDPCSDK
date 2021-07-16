@@ -7,9 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ResolveInfo;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.RemoteException;
 import android.os.UserManager;
 import android.provider.Settings;
@@ -21,7 +19,6 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,13 +26,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.innocomm.innoservice.IInnoBugReportCallback;
 import com.innocomm.innoservice.IInnoClearAppUserDataCallback;
 import com.innocomm.innoservice.IInnoInstallSystemUpdateCallback;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -54,7 +48,6 @@ public class SpecificDPCFragment extends Fragment {
     private static final int REQUEST_CODE_PICK_OTA_FILE = 1;
     private static final int REQUEST_CODE_CONFIRM_CREDENTIAL = 2;
     private CheckBox hideUnusedApps;
-    private static CheckBox requestbugreport;
     private DevicePolicyManager devicePolicyManager;
     private KeyguardManager mKeyguardMgr;
     @Override
@@ -68,7 +61,7 @@ public class SpecificDPCFragment extends Fragment {
     @Override
     public void onDestroy() {
         Log.v(TAG, "onDestroy ");
-        Application.getInstance().mInnoManager.bugreport_unregistercallback(cb3);
+
         super.onDestroy();
     }
 
@@ -186,22 +179,6 @@ public class SpecificDPCFragment extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 buttonView.setChecked(false);
                 showRebootConfirm();
-            }
-        });
-        requestbugreport = view.findViewById(R.id.requestbugreport);
-        requestbugreport.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                buttonView.setChecked(false);
-                showrequestBugreportConfirm();
-            }
-        });
-
-        ImageButton imgbutton_bugreport = view.findViewById(R.id.imgbutton_bugreport);
-        imgbutton_bugreport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                HandleListBugReport(v);
             }
         });
 
@@ -401,37 +378,6 @@ public class SpecificDPCFragment extends Fragment {
         }
     }
 
-    private static final class myIInnoBugReportCallback extends IInnoBugReportCallback.Stub {
-
-        @Override
-        public void onProgress(final int i) throws RemoteException {
-            Log.v(TAG, "onProgress " + i);
-            if (requestbugreport == null) return;
-            requestbugreport.post(new Runnable() {
-                @Override
-                public void run() {
-                    requestbugreport.setText(Application.getInstance().getString(R.string.requestbugreport) + " " + i + "%");
-                }
-            });
-        }
-
-        @Override
-        public void onComplete(final String s) throws RemoteException {
-            Log.v(TAG, "onComplete: " + s);
-            if (requestbugreport == null) return;
-
-            requestbugreport.post(new Runnable() {
-                @Override
-                public void run() {
-                    requestbugreport.setEnabled(true);
-                    requestbugreport.setText(Application.getInstance().getString(R.string.requestbugreport) + " " + s);
-                }
-            });
-        }
-    }
-
-    private myIInnoBugReportCallback cb3 = new myIInnoBugReportCallback();
-
     private void showAppList() {
         Intent mainIntent = new Intent(Intent.ACTION_MAIN, null);
         mainIntent.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -545,27 +491,6 @@ public class SpecificDPCFragment extends Fragment {
                 .show();
     }
 
-
-    private void showrequestBugreportConfirm() {
-        new MaterialAlertDialogBuilder(getActivity())
-                .setTitle(R.string.requestbugreport_title)
-                .setMessage(R.string.requestbugreport_msg)
-                .setPositiveButton(getString(android.R.string.yes), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        requestbugreport.setEnabled(false);
-                        Application.getInstance().mInnoManager.dpc_bugreport_request(cb3);
-                    }
-                })
-                .setNegativeButton(getString(android.R.string.cancel), new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                    }
-                })
-                .show();
-    }
-
     private void HandleImportCACert(Intent data) {
         InputStream iStream = null;
         try {
@@ -617,73 +542,6 @@ public class SpecificDPCFragment extends Fragment {
             } catch (Exception e) {
                 Log.v(TAG, "importCA " + e.toString());
             }
-        }
-    }
-
-    public void HandleListBugReport(View view) {
-        String strings = Application.getInstance().mInnoManager.dpc_bugreport_listfile();
-
-        if (strings != null) {
-            final String[] files = strings.split(" ");
-            new MaterialAlertDialogBuilder(getActivity())
-                    .setTitle(R.string.requestbugreport_list_title)
-                    .setItems(files, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            final String latestFileName = files[which];
-                            Log.v(TAG, "onClick " + which + ":" + latestFileName);
-
-                            new AsyncTask<Void, Void, String>() {
-                                @Override
-                                protected String doInBackground(Void... params) {
-
-                                    String message = "Save error!";
-                                    FileOutputStream fis = null;
-                                    String accessname = Application.getInstance().mInnoManager.dpc_bugreport_openfile(latestFileName);
-                                    if (accessname == null) {
-                                        Log.e(TAG, "Open " + latestFileName + " failed!");
-                                        return message;
-                                    }
-                                    try {
-                                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), accessname);
-                                        String saveName = file.getAbsolutePath();
-                                        Log.e(TAG, "Save to " + saveName);
-                                        fis = new FileOutputStream(saveName);
-
-                                        int content;
-                                        byte[] data = new byte[1024];
-
-                                        while ((content = Application.getInstance().mInnoManager.dpc_bugreport_readfile(latestFileName, data)) != -1) {
-                                            fis.write(data, 0, content);
-                                        }
-                                        message = "File saved to "+saveName;
-                                    } catch (Exception e) {
-                                        Log.e(TAG, "IOException: " + e.toString());
-                                    } finally {
-                                        if (accessname != null)
-                                            Application.getInstance().mInnoManager.dpc_bugreport_closefile(accessname);
-                                        try {
-                                            if (fis != null)
-                                                fis.close();
-                                        } catch (Exception ex) {
-                                            Log.e(TAG, "Exception: " + ex.toString());
-                                        }
-                                    }
-
-                                    return message;
-                                }
-
-                                @Override
-                                protected void onPostExecute(String message) {
-                                    requestbugreport.setText(Application.getInstance().getString(R.string.requestbugreport) + " " + message);
-                                }
-
-                            }.execute();
-
-
-                        }
-                    })
-                    .show();
         }
     }
 

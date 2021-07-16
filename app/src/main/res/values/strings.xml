@@ -79,5 +79,6 @@
     <string name="no_timezone">Timezone not specified</string>
     <string name="invalid_timezone">Timezone id not valid</string>
     <string name="settimezone_title">Set Timezone</string>
+    <string name="proprietary_api">Proprietary API</string>
 
 </resources>

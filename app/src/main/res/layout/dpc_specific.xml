@@ -62,24 +62,7 @@
         style="@style/CustCheckBox"
         android:gravity="center_vertical"
         android:text="@string/reboot_description"/>
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-    <CheckBox
-        android:id="@+id/requestbugreport"
-        style="@style/CustCheckBox"
-        android:gravity="center_vertical"
-        android:text="@string/requestbugreport"/>
-        <ImageButton
-            android:id="@+id/imgbutton_bugreport"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_action_list"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:padding="8dp"/>
-    </RelativeLayout>
+
     <CheckBox
         android:id="@+id/resetpassword"
         style="@style/CustCheckBox"
