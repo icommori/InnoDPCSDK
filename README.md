@@ -118,7 +118,12 @@ InnoDPCSDK is an example using Innocomm DPC SDK which designed to help EMM devel
 | 2 | System property | Set/Get System Properties. |
 | 3 | USB function | Config USB connection type |
 | 4 | BugReport function | Generate BugReport |
-| 5 | Settings function | Config some System settings | 
+| 5 | Settings function | Config System properties | 
+| 6 | NavigationBar mode | Set NavigationBar mode[NAV_BAR_MODE_3BUTTON and NAV_BAR_MODE_GESTURAL] | 
+| 7 | Default Home Launcher | set Default Home Launcher | 
+| 8 | Advanced permission | Grant Advanced permission for specific App | 
+| 9 | Network function | Config WIFI and BT | 
+| 10| Utility function | List mounted volumes,etc... | 
 
 For more information, see API document in doc folder. 
 
