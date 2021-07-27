@@ -11,11 +11,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.innocomm.innoservice.InnoManager;
@@ -26,8 +28,9 @@ public class ProprietaryAPIFragment extends Fragment {
 
     private static final String TAG = ProprietaryAPIFragment.class.getSimpleName();
     public EditText editText,prop_key,prop_val;
-    public TextView inputlog,bugreport_state;
-    public Button btn_usb_none,btn_usb_mtp,btn_bugreport;
+    public TextView inputlog,bugreport_state,wifi_ssid,wifi_pass;
+    public Button btn_usb_none,btn_usb_mtp,btn_bugreport,btn_wifi_add;
+    private SwitchCompat switch_wifi,switch_bt;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,8 +117,31 @@ public class ProprietaryAPIFragment extends Fragment {
 
         bugreport_state= view.findViewById(R.id.bugreport_state);
         btn_bugreport= view.findViewById(R.id.btn_bugreport);
+        wifi_ssid= view.findViewById(R.id.wifi_ssid);
+        wifi_pass= view.findViewById(R.id.wifi_pass);
+        switch_wifi= view.findViewById(R.id.switch_wifi);
+        btn_wifi_add= view.findViewById(R.id.btn_wifi_add);
+        btn_wifi_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String ssid = wifi_ssid.getText().toString().trim();
+                String key = wifi_pass.getText().toString().trim();
+                Log.v(TAG,"Connect to  "+ssid+"/"+key);
+                Application.getInstance().mInnoManager.network_wifi_connect(ssid,key);
+            }
+        });
+        UpdateWIFIState();
+        switch_bt= view.findViewById(R.id.switch_bt);
+        UpdateBTState();
     }
+    @Override
+    public void onResume() {
+        super.onResume();
 
+        Log.v(TAG,"onResume ");
+        UpdateWIFIState();
+        UpdateBTState();
+    }
 
     @Override
     public void onDestroyView() {
@@ -142,6 +168,50 @@ public class ProprietaryAPIFragment extends Fragment {
                 }
             }, immediate ? 0 : 10000);
 
+    }
+
+    private void UpdateWIFIState(){
+        boolean isWIFIEnabled = Application.getInstance().mInnoManager.network_wifi_isEnabled();
+        btn_wifi_add.setEnabled(isWIFIEnabled);
+        switch_wifi.setEnabled(true);
+        switch_wifi.setOnCheckedChangeListener(null);
+        switch_wifi.setChecked(isWIFIEnabled);
+        switch_wifi.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                btn_wifi_add.setEnabled(false);
+                switch_wifi.setEnabled(false);
+                Application.getInstance().mInnoManager.network_wifi_setEnabled(isChecked);
+                btn_wifi_add.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        UpdateWIFIState();
+                    }
+                },3000);
+            }
+        });
+    }
+
+    private void UpdateBTState(){
+        boolean isBTEnabled = Application.getInstance().mInnoManager.network_bt_isEnabled();
+
+        switch_bt.setEnabled(true);
+        switch_bt.setOnCheckedChangeListener(null);
+        switch_bt.setChecked(isBTEnabled);
+        switch_bt.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+                switch_bt.setEnabled(false);
+                Application.getInstance().mInnoManager.network_bt_setEnabled(isChecked);
+                switch_bt.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        UpdateBTState();
+                    }
+                },3000);
+            }
+        });
     }
 
 }

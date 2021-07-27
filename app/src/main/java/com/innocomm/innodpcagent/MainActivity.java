@@ -15,6 +15,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.RemoteException;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
             PackageInfo pInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             versionName = pInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
             e.printStackTrace();
         }
         //test
@@ -391,6 +393,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void HandleListVolumes(View view) {
+        String[] volumes = new String[10];
+        Application.getInstance().mInnoManager.utils_getVolumePaths(volumes);
+        List<String> mountedvolumes = new ArrayList<>();
+        for (String s : volumes) {
+            if (!TextUtils.isEmpty(s)) {
+                mountedvolumes.add(s);
+                Log.v(TAG, "storage: " + s);
+            }
+        }
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.mountedvolumes_title)
+                .setItems((String[]) mountedvolumes.toArray(new String[0]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .show();
+    }
+
+
     //BugReport
     private static final class myIInnoBugReportCallback extends IInnoBugReportCallback.Stub {
         private WeakReference<MainActivity> mActivity;
@@ -580,9 +605,10 @@ public class MainActivity extends AppCompatActivity {
         return componentNames;
     }
 
-    private String[] getInstallAppPermission(){
+    private String[] getPermissionapp(String permission){
         List<String> lists = new ArrayList<>();
         final PackageManager pm = getPackageManager();
+        int mask = ApplicationInfo.FLAG_SYSTEM | ApplicationInfo.FLAG_UPDATED_SYSTEM_APP;
         // Loop each package requesting <manifest> permissions
         for (final PackageInfo pi : pm.getInstalledPackages(PackageManager.GET_PERMISSIONS)) {
             final String[] permissions = pi.requestedPermissions;
@@ -592,11 +618,17 @@ public class MainActivity extends AppCompatActivity {
                 // No permissions defined in <manifest>
                 continue;
             }
+            try {
+                ApplicationInfo ai = pm.getApplicationInfo(pi.packageName, 0);
+                if ((ai.flags & mask) != 0) continue;//skip system apps
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
             // Loop each <uses-permission> tag to retrieve the permission flag
             for (int i = 0, len = permissions.length; i < len; i++) {
                 final String requestedPerm = permissions[i];
-                if(requestedPerm.equals("android.permission.REQUEST_INSTALL_PACKAGES")){
-                    Log.v(TAG, "Has INSTALL_PACKAGES: " + pkgName);
+                if(requestedPerm.equals(permission)){
+                    Log.v(TAG, "Has "+permission+": " + pkgName);
                     lists.add(pkgName);
                     break;
                 }
@@ -631,14 +663,49 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void HandleAllowInstallApps(View view) {
-        String[] list = getInstallAppPermission();
+        String[] list = getPermissionapp("android.permission.REQUEST_INSTALL_PACKAGES");
 
         new MaterialAlertDialogBuilder(MainActivity.this)
                 .setItems(list, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String pkgName= list[which];
-                        if(Application.getInstance().mInnoManager.settings_setCanInstallApps(pkgName)){
+                        if(Application.getInstance().mInnoManager.settings_setAdvanedPermission(pkgName,InnoManager.ADV_PERMISSION_OP_REQUEST_INSTALL_PACKAGES,true)){
+                            Toast.makeText(MainActivity.this, "Succeeded!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .show();
+    }
+
+    public void HandleAllowDisplayOverOtehrApps(View view) {
+        String[] list = getPermissionapp("android.permission.SYSTEM_ALERT_WINDOW");
+
+        new MaterialAlertDialogBuilder(MainActivity.this)
+                .setItems(list, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String pkgName= list[which];
+                        if(Application.getInstance().mInnoManager.settings_setAdvanedPermission(pkgName, InnoManager.ADV_PERMISSION_OP_SYSTEM_ALERT_WINDOW,true)){
+                            Toast.makeText(MainActivity.this, "Succeeded!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .show();
+    }
+    public void HandleAllowWriteSettings(View view) {
+        String[] list = getPermissionapp("android.permission.WRITE_SETTINGS");
+
+        new MaterialAlertDialogBuilder(MainActivity.this)
+                .setItems(list, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String pkgName= list[which];
+                        if(Application.getInstance().mInnoManager.settings_setAdvanedPermission(pkgName, InnoManager.ADV_PERMISSION_OP_WRITE_SETTINGS,true)){
                             Toast.makeText(MainActivity.this, "Succeeded!", Toast.LENGTH_SHORT).show();
                         }else{
                             Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
