@@ -15,9 +15,9 @@ InnoDPCSDK is an example using Innocomm DPC SDK which designed to help EMM devel
 
 * Enter or Exit Device owner mode anytime you want.[no need to set it before setupwizard or through adb]. 
 * Easy programming with an manager that provided by Innocomm SDK. 
-* The InnoManager user can be restricted to only for system apps or platform apps.
+* The InnoManager can be restricted to only for system apps or platform apps.
 * Easy to integrate with Cloud  functions.
-* Support 60 restrictions and many addtional functions.
+* Support 60 restrictions and rich addtional functions.
 
 ## Restriction Type
 
@@ -111,7 +111,7 @@ InnoDPCSDK is an example using Innocomm DPC SDK which designed to help EMM devel
 | 15 | Settings |  Update  android.provider.Settings.Global/System/Secure settings |
 | 16 | Permission |  Set/Get Permission Grant State |
 
-### Proprietary API:
+### Proprietary API: [no need to enter DPC mode]
 |   |     |   |
 | ------------- | -------------   | :------------- |
 | 1 | InputMethod | Send string data and termination key information (Enter / Ctrl Enter / Tab etc.) to Editbox. |
