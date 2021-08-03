@@ -123,7 +123,7 @@ InnoDPCSDK is an example using Innocomm DPC SDK which designed to help EMM devel
 | 7 | Default Home Launcher | set Default Home Launcher | 
 | 8 | Advanced permission | Grant Advanced permission for specific App | 
 | 9 | Network function | Config WIFI and BT | 
-| 10| Utility function | List mounted volumes,etc... | 
+| 10| Utility function | List mounted volumes,Clear RecentTask,Install/Remove Apps,Enable/Disable Apps... | 
 
 For more information, see API document in doc folder. 
 
