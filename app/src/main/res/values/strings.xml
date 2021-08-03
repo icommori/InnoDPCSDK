@@ -81,5 +81,8 @@
     <string name="settimezone_title">Set Timezone</string>
     <string name="proprietary_api">Proprietary API</string>
     <string name="mountedvolumes_title">Mounted Volumes</string>
+    <string name="display_density_title">Display Density</string>
+    <string name="font_scale_title">Font Scale</string>
+    <string name="capture_screen_title">Capture Screen</string>
 
 </resources>

@@ -11,11 +11,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -23,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,8 +40,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.tabs.TabLayout;
 import com.innocomm.innodpcagent.databinding.ActMainBinding;
 import com.innocomm.innoservice.IInnoBugReportCallback;
+import com.innocomm.innoservice.IInnoFileReadWriteCallback;
 import com.innocomm.innoservice.InnoManager;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.ref.WeakReference;
@@ -49,7 +56,6 @@ import java.util.Random;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-
     private ActMainBinding binding;
     private String versionName;
 
@@ -74,7 +80,9 @@ public class MainActivity extends AppCompatActivity {
         DevicePolicyManager devicePolicyManager = (DevicePolicyManager) getSystemService(DEVICE_POLICY_SERVICE);
         boolean result = devicePolicyManager.isProvisioningAllowed(DevicePolicyManager.ACTION_PROVISION_MANAGED_DEVICE);
         Log.v(TAG, "isProvisioningAllowed " + result);
-
+        Log.v(TAG, "airplane_mode_radios " +Application.getInstance().mInnoManager.settings_getSettingsGlobal("airplane_mode_radios",InnoManager.SETTING_TYPE_STRING));
+        Log.v(TAG, "screen_off_timeout " +Application.getInstance().mInnoManager.settings_getSettingsSystem("screen_off_timeout",InnoManager.SETTING_TYPE_LONG));
+        Log.v(TAG, "android_id " +Application.getInstance().mInnoManager.settings_getSettingsSecure("android_id",InnoManager.SETTING_TYPE_STRING));
     }
 
     @Override
@@ -116,6 +124,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        Log.v(TAG, "onActivityResult " + requestCode);
     }
 
     @Override
@@ -415,6 +424,152 @@ public class MainActivity extends AppCompatActivity {
                 .show();
     }
 
+    public void HandleSetDisplayDensity(View view) {
+        List<String> densityList = new ArrayList<>();
+        densityList.add("RESET");
+        densityList.add("160");
+        densityList.add("240");
+        densityList.add("320");
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.display_density_title)
+                .setItems((String[]) densityList.toArray(new String[0]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int density = 0;
+                        if(which>0){
+                            density = Integer.valueOf(densityList.get(which));
+                        }
+                        Application.getInstance().mInnoManager.settings_setDisplayDensity(density);
+                    }
+                })
+                .show();
+
+    }
+
+    public void HandleSetFontSize(View view) {
+        List<String> fontScaleList = new ArrayList<>();
+        fontScaleList.add("0.85");
+        fontScaleList.add("1.0");
+        fontScaleList.add("1.15");
+        fontScaleList.add("1.30");
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.font_scale_title)
+                .setItems((String[]) fontScaleList.toArray(new String[0]), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        float fontScale = Float.valueOf(fontScaleList.get(which));
+
+                        Application.getInstance().mInnoManager.settings_setSettingsSystem(Settings.System.FONT_SCALE,String.valueOf(fontScale),InnoManager.SETTING_TYPE_FLOAT);
+                    }
+                })
+                .show();
+    }
+
+    public void HandleClearRecents(View view) {
+        Application.getInstance().mInnoManager.utils_clearRecentTasks();
+    }
+
+    public void HandleScreenCapture(View view) {
+        DateFormat df = new android.text.format.DateFormat();
+        String date = (String) df.format("yyyy_MM_dd_hh_mm_ss.jpg", new java.util.Date());
+
+        String path = "/sdcard/Pictures/"+date;
+        Application.getInstance().mInnoManager.utils_screenCapture(new IInnoFileReadWriteCallback.Stub() {
+            @Override
+            public int read(byte[] bytes) throws RemoteException {
+                return 0;
+            }
+
+            @Override
+            public void write(byte[] bytes, int i, int i1) throws RemoteException {
+                Log.v(TAG, "utils_screenCapture offset:" + i+", size: "+i1);
+                if(bytes!=null) Log.v(TAG, "bytes.length:" +bytes.length);
+                ByteArrayInputStream baos = new ByteArrayInputStream(bytes);
+                binding.tabLayout.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        showImage(baos);
+                    }
+                });
+
+            }
+
+            @Override
+            public void close() throws RemoteException {
+
+            }
+        });
+    }
+
+    private void showImage(ByteArrayInputStream inputStream) {
+        ImageView img = new ImageView(this);
+        Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+        img.setImageBitmap(bitmap);
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.capture_screen_title)
+                .setView(img)
+                .setPositiveButton(getString(android.R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                    }
+                })
+                .show();
+    }
+
+    public void HandleUninstallApp(View view) {
+        String[] list = getInstallApps();
+        new MaterialAlertDialogBuilder(MainActivity.this)
+                .setItems(list, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String pkgName= list[which];
+
+                        if(Application.getInstance().mInnoManager.utils_unInstallAPK(pkgName)){
+                            Toast.makeText(MainActivity.this, "Succeeded!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .show();
+    }
+
+    public void HandleEnableApp(View view) {
+        String[] list = getInstallApps();
+        new MaterialAlertDialogBuilder(MainActivity.this)
+                .setItems(list, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String pkgName= list[which];
+
+                        if(Application.getInstance().mInnoManager.utils_setApplicationEnabledSetting(pkgName,true)){
+                            Toast.makeText(MainActivity.this, "Succeeded!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .show();
+    }
+    public void HandleDisableApp(View view) {
+        String[] list = getInstallApps();
+        new MaterialAlertDialogBuilder(MainActivity.this)
+                .setItems(list, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String pkgName= list[which];
+
+                        if(Application.getInstance().mInnoManager.utils_setApplicationEnabledSetting(pkgName,false)){
+                            Toast.makeText(MainActivity.this, "Succeeded!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            Toast.makeText(MainActivity.this, "Failed!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                })
+                .show();
+    }
 
     //BugReport
     private static final class myIInnoBugReportCallback extends IInnoBugReportCallback.Stub {

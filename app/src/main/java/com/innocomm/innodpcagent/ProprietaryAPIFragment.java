@@ -3,6 +3,7 @@ package com.innocomm.innodpcagent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.RemoteException;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,17 +21,26 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
+import com.innocomm.innoservice.IInnoFileReadWriteCallback;
 import com.innocomm.innoservice.InnoManager;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
+
+import static android.app.Activity.RESULT_OK;
 
 public class ProprietaryAPIFragment extends Fragment {
 
     private static final String TAG = ProprietaryAPIFragment.class.getSimpleName();
+    public static final int REQUEST_CODE_PICK_APK = 1;
+
     public EditText editText,prop_key,prop_val;
     public TextView inputlog,bugreport_state,wifi_ssid,wifi_pass;
     public Button btn_usb_none,btn_usb_mtp,btn_bugreport,btn_wifi_add;
     private SwitchCompat switch_wifi,switch_bt;
+    private static InputStream apkInputStream = null;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,6 +143,16 @@ public class ProprietaryAPIFragment extends Fragment {
         UpdateWIFIState();
         switch_bt= view.findViewById(R.id.switch_bt);
         UpdateBTState();
+
+        view.findViewById(R.id.btn_installapk).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("application/vnd.android.package-archive");
+                startActivityForResult(Intent.createChooser(intent, null), ProprietaryAPIFragment.REQUEST_CODE_PICK_APK);
+
+            }
+        });
     }
     @Override
     public void onResume() {
@@ -153,6 +173,15 @@ public class ProprietaryAPIFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Log.v(TAG, "onActivityResult " + requestCode);
+        if ((REQUEST_CODE_PICK_APK == requestCode) && (resultCode == RESULT_OK) && data != null) {
+            Log.v(TAG, "REQUEST_CODE_PICK_APK ");
+            try {
+                apkInputStream = getActivity().getContentResolver().openInputStream(data.getData());
+                Application.getInstance().mInnoManager.utils_installAPK(cb1);
+            }catch (Exception e){
+                Log.v(TAG, "REQUEST_CODE_PICK_APK Exception: "+e.toString());
+            }
+        }
     }
 
     public void UpdateUSBState(boolean immediate) {
@@ -214,4 +243,34 @@ public class ProprietaryAPIFragment extends Fragment {
         });
     }
 
+    private myIInnoFileReadWriteCallback cb1 = new myIInnoFileReadWriteCallback();
+
+    private static final class myIInnoFileReadWriteCallback extends IInnoFileReadWriteCallback.Stub {
+        private MainActivity mContext;
+
+        @Override
+        public int read(byte[] bytes) throws RemoteException {
+            if(apkInputStream!=null){
+                int len = 0;
+                try {
+                    len = apkInputStream.read(bytes);
+                    Log.v(TAG, "apkInputStream read: "+len);
+                    return len;
+                } catch (IOException e) {
+                    Log.v(TAG, "apkInputStream Exception: "+e.toString());
+                }
+            }
+            return -1;
+        }
+
+        @Override
+        public void write(byte[] bytes, int i, int i1) throws RemoteException {
+
+        }
+
+        @Override
+        public void close() throws RemoteException {
+
+        }
+    }
 }

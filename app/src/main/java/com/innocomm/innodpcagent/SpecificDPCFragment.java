@@ -44,9 +44,9 @@ import static android.app.Activity.RESULT_OK;
 public class SpecificDPCFragment extends Fragment {
 
     private static final String TAG = SpecificDPCFragment.class.getSimpleName();
-    private static final int REQUEST_CODE_PICK_CA_FILE = 0;
-    private static final int REQUEST_CODE_PICK_OTA_FILE = 1;
-    private static final int REQUEST_CODE_CONFIRM_CREDENTIAL = 2;
+    private static final int REQUEST_CODE_PICK_CA_FILE = 1;
+    private static final int REQUEST_CODE_PICK_OTA_FILE = 2;
+    private static final int REQUEST_CODE_CONFIRM_CREDENTIAL = 3;
     private CheckBox hideUnusedApps;
     private DevicePolicyManager devicePolicyManager;
     private KeyguardManager mKeyguardMgr;
